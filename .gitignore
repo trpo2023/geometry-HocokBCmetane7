@@ -2,3 +2,4 @@ main
 geometry
 *.txt
 *.o
+.clang-format
