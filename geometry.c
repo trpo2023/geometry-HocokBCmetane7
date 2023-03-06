@@ -9,7 +9,9 @@
 #define NO_GEOMETRIC_SHAPE_FOUND_ERROR -2
 #define LEFT_PARENTHESIS_ERROR -3
 #define RIGHT_PARENTHESIS_ERROR -4
-char *(GEOMETRIC_SHAPES[]) = {"circle", "triangle", "polygram"};
+
+
+char *(GEOMETRIC_SHAPES[]) = {"circle", "triangle", "polygon"};
 
 
 void CatchError(const char*, const int, const int, const int);
@@ -17,10 +19,21 @@ void PrintError(const int, const char*, const int);
 int StringCompare(const char*, const char*, const int, const int);
 
 
+char* ToLower(const char * const string, const int str_len)
+{
+	int i = 0;
+	int str_copy_len = str_len+1;
+	char* const string_copy = malloc(str_copy_len);
+	while (string[i] != '\0')
+	{
+		string_copy[i] = tolower(string[i]);
+		++i;
+	}
+	string_copy[str_copy_len] = '\0';
+	return string_copy;
+}
 
-
-
-char *DeleteNewline(const char *string, const int str_len)
+char* DeleteNewline(const char *string, const int str_len)
 {
 	char * const string_copy = malloc(str_len);
 	for (int i = 0; i < str_len-1; i++)
@@ -28,7 +41,6 @@ char *DeleteNewline(const char *string, const int str_len)
 		string_copy[i] = string[i];
 	}
 	string_copy[str_len-1] = '\0';
-	
 	return string_copy;
 }
 
@@ -103,12 +115,15 @@ void CatchError(const char* string, const int geometric_shapes_arr_size, const i
 			if (string[geometric_shape_length] != '(')
 			{
 					PrintError(LEFT_PARENTHESIS_ERROR, string, line_number);
-			}	
+			}
+			
 		}
+	
+	
+	
 }
 	
 	
-
 struct Point
 {
 	double x;
@@ -136,7 +151,7 @@ int main(int argc, char *argv[])
 	else 
 	{
 		ssize_t str_len;
-		char *string = NULL;																																																																																																																																															
+		char *string = NULL;																																																																																																																																												
 		size_t len;
 		int line_number = 0;
 		int geometric_shapes_arr_size = sizeof(GEOMETRIC_SHAPES)/sizeof(GEOMETRIC_SHAPES[0]);
@@ -144,6 +159,7 @@ int main(int argc, char *argv[])
         {
 			if (string[str_len-1] == '\n')
 				string = DeleteNewline(string, str_len);
+			string = ToLower(string, str_len); //can create new string to display the original string in console
 			--str_len;
 			++line_number;
 			CatchError(string, geometric_shapes_arr_size, str_len, line_number);
