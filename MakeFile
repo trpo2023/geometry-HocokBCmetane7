@@ -1,4 +1,2 @@
-main:
-gcc -Wall -O0 -g main.c -o main
-geometry:
+geometry: geometry.c
 gcc -Wall -O0 -g geometry.c -o geometry
