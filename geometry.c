@@ -10,24 +10,26 @@
 #define LEFT_PARENTHESIS_ERROR -3
 #define RIGHT_PARENTHESIS_ERROR -4
 #define UNEXPECTED_TOKEN_ERROR -5
-#define NO_TYPE_CAST_ERROR -6        
+#define NO_TYPE_CAST_ERROR -6
+#define TOO_MANY_ARGUMENTS_ERROR -7        //!!
 
 
 char *(GEOMETRIC_SHAPES[]) = {"circle", "triangle", "polygon"};
+int GEOMETRIC_SHAPES_SIZE[] = {3, 6, 8};
 
 
 void CatchError(char*, const int, const int, const int);
 void PrintError(const int, const char*, const int);
 int FindShape(const char*, const char*, const int, const int);
 char* DeleteNewline(const char *string, const int str_len);
-bool ReadArguments(char* string);
+int ReadArguments(char* string, int);
 char* FormatArgumentString(char*, int, char*, char*);
 int CountSymbol(char* begin, char* end, char symbol);
 
 
 
 
-bool ReadArguments(char* string)
+int ReadArguments(char* string, int geometric_shape_size_index)
 {
 	bool valid_argument = true;
 	char* begin;
@@ -49,16 +51,22 @@ bool ReadArguments(char* string)
 		--str_len;
 	}
 	begin = end = string;
+	arguments_amount = CountSymbol(string, string+str_len, ' ')-unnecessary_spaces+1;
+	if (GEOMETRIC_SHAPES_SIZE[geometric_shape_size_index] != arguments_amount)
+	{
+		return TOO_MANY_ARGUMENTS_ERROR;
+	}
 	
-	double arr[CountSymbol(string, string+str_len, ' ')-unnecessary_spaces+1];
-
+	double arr[arguments_amount];
 	int i = 0;
-	while (*end != '\0')
+
+	
+	while (*end != '\0' && i != arguments_amount)
 	{
 		while(!isspace(*end))
 		{
-			if (*end =='.' && *(end+1) == '.' || (isalpha(*end) || (ispunct(*end) && *end != '.')) && *end != '\0')
-				return 0;
+			if (*end =='.' && *(end+1) == '.' || (isalpha(*end) || (ispunct(*end) && *end != '.' && *end != '-')) && *end != '\0')
+				return NO_TYPE_CAST_ERROR;
 			if (*end == '\0')
 				break;
 			++end;
@@ -69,9 +77,9 @@ bool ReadArguments(char* string)
 			string_copy[i] = *(begin+i);
 		}
 	
-		if ((!atof(string_copy)))
+		if ((!atof(string_copy)))		//7.99994...
 		{
-			valid_argument = false;
+			valid_argument = NO_TYPE_CAST_ERROR;
 			break;
 		}
 		arr[i] = atof(string_copy);
@@ -227,6 +235,9 @@ void PrintError(const int code_error, const char* string, const int line_number)
 	case NO_TYPE_CAST_ERROR:
 		printf("%s %d: %s\n\n%s\n\n\n", "Error in line",	line_number, string, "Expected '<double>'");
 		break;
+	case TOO_MANY_ARGUMENTS_ERROR:
+		printf("%s %d: %s\n\n%s\n\n\n", "Error in line",	line_number, string, "Too many/little argument were given");
+		break;
 	default:
 	printf("%s", "Unknown error.");
 		break;
@@ -240,7 +251,7 @@ void CatchError(char* string, const int geometric_shapes_arr_size, const int str
 	int i = 0;
 	bool shape_match = false;
 	int geometric_shape_length = strlen(GEOMETRIC_SHAPES[i]);
-	char *right_parenthesis = NULL, *argument = NULL;  // !!!rename
+	char *right_parenthesis = NULL, *argument = NULL;
 	char *left_parenthesis;
 
 	while(i < geometric_shapes_arr_size)
@@ -265,10 +276,8 @@ void CatchError(char* string, const int geometric_shapes_arr_size, const int str
 			
 			if (string[geometric_shape_length] != '(')							//no '(' whatsoever
 				{
-					if (ispunct(string[geometric_shape_length]))				//if it's not alpha and not '(', but is punct)
-						PrintError(NO_GEOMETRIC_SHAPE_FOUND_ERROR, string, line_number); //e.g '.'
-					else
-						PrintError(LEFT_PARENTHESIS_ERROR, string, line_number);
+					if (ispunct(string[geometric_shape_length]))				//if it's not an alpha and not '(', but it's punct
+						PrintError(LEFT_PARENTHESIS_ERROR, string, line_number); //e.g '.'
 				}
 			else
 			{
@@ -293,10 +302,12 @@ void CatchError(char* string, const int geometric_shapes_arr_size, const int str
 						}
 					}
 					char* argument_string = FormatArgumentString(string, str_len, left_parenthesis, right_parenthesis);
-					if (!ReadArguments(argument_string))
+					if (ReadArguments(argument_string, i) == NO_TYPE_CAST_ERROR)
 					{
 						PrintError(NO_TYPE_CAST_ERROR, string, line_number);
 					}
+					if (ReadArguments(argument_string, i) == TOO_MANY_ARGUMENTS_ERROR)
+						PrintError(TOO_MANY_ARGUMENTS_ERROR, string, line_number);
 				}
 			}
 		}
