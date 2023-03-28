@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-
 #define READ_FILE_ERROR -1 
 #define NO_GEOMETRIC_SHAPE_FOUND_ERROR -2
 #define LEFT_PARENTHESIS_ERROR -3
@@ -13,10 +12,8 @@
 #define NO_TYPE_CAST_ERROR -6
 #define TOO_MANY_ARGUMENTS_ERROR -7        //!!
 
-
 char *(GEOMETRIC_SHAPES[]) = {"circle", "triangle", "polygon"};
 int GEOMETRIC_SHAPES_SIZE[] = {3, 6, 8};
-
 
 void CatchError(char*, const int, const int, const int);
 void PrintError(const int, const char*, const int);
@@ -25,9 +22,6 @@ char* DeleteNewline(const char *string, const int str_len);
 int ReadArguments(char* string, int);
 char* FormatArgumentString(char*, int, char*, char*);
 int CountSymbol(char* begin, char* end, char symbol);
-
-
-
 
 int ReadArguments(char* string, int geometric_shape_size_index)
 {
@@ -91,7 +85,6 @@ int ReadArguments(char* string, int geometric_shape_size_index)
 	return valid_argument;
 }
 
-
 int CountSymbol(char* begin, char* end, char symbol)
 {
 	int i = 0;
@@ -105,7 +98,6 @@ int CountSymbol(char* begin, char* end, char symbol)
 	return count;
 }
 
-
 int CountDoubleSpace(char* begin, char* end)
 {
 	int i = 0;
@@ -118,7 +110,6 @@ int CountDoubleSpace(char* begin, char* end)
 	}
 	return double_space_count;
 }
-
 
 char* FormatArgumentString(char* string, int str_len, char* begin, char* end)
 {
@@ -170,7 +161,6 @@ char* FormatArgumentString(char* string, int str_len, char* begin, char* end)
 	return string_copy;
 }
 
-
 char* ToLower(const char * const string, const int str_len)
 {
 	int i = 0;
@@ -184,7 +174,6 @@ char* ToLower(const char * const string, const int str_len)
 	return string_copy;
 }
 
-
 char* DeleteNewline(const char *string, const int str_len)
 {
 	char * const string_copy = malloc(str_len);
@@ -195,7 +184,6 @@ char* DeleteNewline(const char *string, const int str_len)
 	string_copy[str_len-1] = '\0';
 	return string_copy;
 }
-
 
 int FindShape(const char * string, const char *geometric_shape, const int str_len, const int geometric_shape_length)
 {
@@ -211,7 +199,6 @@ int FindShape(const char * string, const char *geometric_shape, const int str_le
 	}
 	return string_match;
 }
-
 
 void PrintError(const int code_error, const char* string, const int line_number)
 {
@@ -242,9 +229,7 @@ void PrintError(const int code_error, const char* string, const int line_number)
 	printf("%s", "Unknown error.");
 		break;
 	}
-	
 }
-
 
 void CatchError(char* string, const int geometric_shapes_arr_size, const int str_len, const int line_number)
 {
@@ -313,13 +298,11 @@ void CatchError(char* string, const int geometric_shapes_arr_size, const int str
 		}
 }
 	
-	
 struct Point
 {
 	double x;
 	double y;
 };
-
 
 struct GeometricShapes
 {
@@ -330,7 +313,6 @@ struct GeometricShapes
 	};
 
 };
-
 
 int main(int argc, char *argv[])
 {
@@ -356,8 +338,6 @@ int main(int argc, char *argv[])
 			++line_number;
 			CatchError(string, geometric_shapes_arr_size, str_len, line_number);
         }	
-
-
 	fclose(file);
 	}
 	return 0;
