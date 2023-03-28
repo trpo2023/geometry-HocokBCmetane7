@@ -65,7 +65,7 @@ int ReadArguments(char* string, int geometric_shape_size_index)
 	{
 		while(!isspace(*end))
 		{
-			if (*end =='.' && *(end+1) == '.' || (isalpha(*end) || (ispunct(*end) && *end != '.' && *end != '-')) && *end != '\0')
+			if ((*end =='.' && *(end+1) == '.') || (isalpha(*end) || (ispunct(*end) && *end != '.' && *end != '-')) && *end != '\0')
 				return NO_TYPE_CAST_ERROR;
 			if (*end == '\0')
 				break;
@@ -251,7 +251,7 @@ void CatchError(char* string, const int geometric_shapes_arr_size, const int str
 	int i = 0;
 	bool shape_match = false;
 	int geometric_shape_length = strlen(GEOMETRIC_SHAPES[i]);
-	char *right_parenthesis = NULL, *argument = NULL;
+	char *right_parenthesis = NULL;
 	char *left_parenthesis;
 
 	while(i < geometric_shapes_arr_size)
